@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -203,13 +203,36 @@ const brands = ["ASUS", "acer", "MSI", "HP", "Lenovo", "SAMSUNG", "intel"];
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  useEffect(() => {
+    const revealElements = document.querySelectorAll<HTMLElement>("[data-reveal]");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -80px 0px",
+      }
+    );
+
+    revealElements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, []);
+
   function closeMenu() {
     setMenuOpen(false);
   }
 
   return (
-    <main className="min-h-screen overflow-hidden bg-slate-50 text-slate-950">
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#07111f]/95 backdrop-blur-xl">
+    <main className="min-h-screen overflow-x-clip bg-slate-50 text-slate-950">
+      <header className="sticky top-0 z-50 animate-slide-down border-b border-white/10 bg-[#07111f]/95 shadow-[0_12px_40px_rgba(2,6,23,0.22)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-5 lg:px-8 lg:py-4">
           <a href="#" onClick={closeMenu} className="flex min-w-0 items-center gap-3">
             <div className="grid size-10 shrink-0 place-items-center rounded-2xl border border-lime-400/60 bg-lime-400/10 text-xl font-black text-lime-400 shadow-[0_0_28px_rgba(132,204,22,0.18)] sm:size-12 sm:text-2xl">
@@ -259,29 +282,41 @@ export default function Home() {
               type="button"
               onClick={() => setMenuOpen((current) => !current)}
               aria-label={menuOpen ? "Stäng meny" : "Öppna meny"}
-              className="grid size-11 place-items-center rounded-2xl border border-white/15 bg-white/5 text-white lg:hidden"
+              className="grid size-11 place-items-center rounded-2xl border border-white/15 bg-white/5 text-white transition-all duration-300 hover:bg-white/10 active:scale-95 lg:hidden"
             >
-              <FontAwesomeIcon icon={menuOpen ? faXmark : faBars} />
+              <FontAwesomeIcon
+                icon={menuOpen ? faXmark : faBars}
+                className="transition-transform duration-300"
+              />
             </button>
           </div>
         </div>
 
-        {menuOpen && (
-          <div className="border-t border-white/10 bg-[#07111f] px-4 py-4 lg:hidden">
-            <nav className="mx-auto grid max-w-7xl gap-2">
-              {navItems.map((item) => (
+        <div
+          className={`grid border-t border-white/10 bg-[#07111f] px-4 transition-[grid-template-rows,opacity] duration-300 ease-out lg:hidden ${
+            menuOpen
+              ? "grid-rows-[1fr] opacity-100"
+              : "pointer-events-none grid-rows-[0fr] opacity-0"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <nav className="mx-auto grid max-w-7xl gap-2 py-4">
+              {navItems.map((item, index) => (
                 <a
                   key={item.label}
                   href={item.href}
                   onClick={closeMenu}
-                  className="rounded-2xl px-4 py-3 text-sm font-black text-white/80 transition hover:bg-white/5 hover:text-white"
+                  style={{ transitionDelay: menuOpen ? `${index * 35}ms` : "0ms" }}
+                  className={`rounded-2xl px-4 py-3 text-sm font-black text-white/80 transition-all duration-300 hover:bg-white/5 hover:text-white ${
+                    menuOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
+                  }`}
                 >
                   {item.label}
                 </a>
               ))}
             </nav>
           </div>
-        )}
+        </div>
       </header>
 
       <section className="relative overflow-hidden bg-[#07111f] text-white">
@@ -290,22 +325,22 @@ export default function Home() {
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-10 sm:px-5 sm:py-12 lg:grid-cols-[0.95fr_1.05fr] lg:px-8 lg:py-16">
           <div className="min-w-0">
-            <div className="mb-5 inline-flex max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[11px] font-black uppercase tracking-wide text-white/75 sm:text-xs">
+            <div className="mb-5 inline-flex max-w-full animate-fade-up items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[11px] font-black uppercase tracking-wide text-white/75 sm:text-xs">
               <FontAwesomeIcon icon={faLocationDot} className="shrink-0 text-lime-400" />
               <span className="truncate">Lokal datorbutik i hjärtat av Piteå</span>
             </div>
 
-            <h1 className="max-w-3xl text-[2.55rem] font-black leading-[0.98] tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="animate-fade-up animate-delay-100 max-w-3xl text-[2.55rem] font-black leading-[0.98] tracking-tight sm:text-5xl lg:text-6xl">
               Datorservice & reparation{" "}
               <span className="text-lime-400">i Piteå</span>
             </h1>
 
-            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
+            <p className="animate-fade-up animate-delay-200 mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
               Vi hjälper dig med reparationer, support, uppgraderingar och nya
               datorer — snabbt, tryggt och personligt.
             </p>
 
-            <div className="mt-7 grid gap-3 sm:flex sm:flex-wrap">
+            <div className="animate-fade-up animate-delay-300 mt-7 grid gap-3 sm:flex sm:flex-wrap">
               <a
                 href="tel:0703272936"
                 className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-lime-400 px-6 py-4 text-sm font-black text-slate-950 shadow-[0_18px_45px_rgba(132,204,22,0.24)] transition hover:-translate-y-0.5 hover:bg-lime-300 sm:text-base"
@@ -323,7 +358,7 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:gap-x-7 sm:gap-y-4">
+            <div className="animate-fade-up animate-delay-400 mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:gap-x-7 sm:gap-y-4">
               {benefits.map((benefit) => (
                 <div
                   key={benefit.title}
@@ -344,7 +379,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
+          <div className="animate-scale-in animate-delay-300 relative mx-auto w-full max-w-lg lg:max-w-none">
             <div className="relative rounded-[2rem] border border-white/15 bg-slate-950/80 p-3 shadow-2xl backdrop-blur sm:p-4 lg:ml-auto lg:w-[88%]">
               <div className="grid aspect-[16/10] place-items-center rounded-[1.5rem] bg-gradient-to-br from-slate-900 via-slate-950 to-blue-950">
                 <div className="text-center">
@@ -365,21 +400,21 @@ export default function Home() {
               <div className="mx-auto h-4 w-2/3 rounded-b-2xl bg-slate-800" />
             </div>
 
-            <div className="absolute right-2 top-4 rounded-3xl border border-white/10 bg-white/5 p-4 shadow-2xl backdrop-blur sm:right-3 sm:top-8 sm:p-5">
+            <div className="animate-float absolute right-2 top-4 rounded-3xl border border-white/10 bg-white/5 p-4 shadow-2xl backdrop-blur sm:right-3 sm:top-8 sm:p-5">
               <FontAwesomeIcon
                 icon={faMicrochip}
                 className="text-3xl text-blue-400 sm:text-5xl"
               />
             </div>
 
-            <div className="absolute bottom-8 left-2 rounded-3xl border border-lime-400/20 bg-lime-400/10 p-4 text-lime-400 shadow-2xl backdrop-blur sm:bottom-10 sm:p-5 lg:left-auto lg:right-2">
+            <div className="animate-float-delayed absolute bottom-8 left-2 rounded-3xl border border-lime-400/20 bg-lime-400/10 p-4 text-lime-400 shadow-2xl backdrop-blur sm:bottom-10 sm:p-5 lg:left-auto lg:right-2">
               <FontAwesomeIcon icon={faLaptop} className="text-3xl sm:text-5xl" />
             </div>
           </div>
         </div>
       </section>
 
-      <section id="services" className="px-4 py-12 sm:px-5 lg:px-8 lg:py-16">
+      <section id="services" className="scroll-mt-24 px-4 py-12 sm:px-5 lg:px-8 lg:py-16">
         <div className="mx-auto max-w-7xl">
           <p className="text-sm font-black uppercase tracking-wide text-lime-600">
             Våra tjänster
@@ -397,9 +432,11 @@ export default function Home() {
           </div>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {services.map((service) => (
+            {services.map((service, index) => (
               <article
                 key={service.title}
+                data-reveal="up"
+                style={{ transitionDelay: `${index * 70}ms` }}
                 className="group rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="mb-5 grid size-14 place-items-center rounded-2xl bg-lime-400/10 text-2xl text-lime-600 transition group-hover:bg-lime-400 group-hover:text-slate-950">
@@ -421,7 +458,7 @@ export default function Home() {
 
       <section
         id="computers"
-        className="relative overflow-hidden bg-[#07111f] px-4 py-14 text-white sm:px-5 lg:px-8 lg:py-16"
+        className="scroll-mt-24 relative overflow-hidden bg-[#07111f] px-4 py-14 text-white sm:px-5 lg:px-8 lg:py-16"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(132,204,22,0.12),transparent_28%),radial-gradient(circle_at_85%_15%,rgba(59,130,246,0.16),transparent_30%)]" />
 
@@ -461,9 +498,11 @@ export default function Home() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            {computerItems.map((item) => (
+            {computerItems.map((item, index) => (
               <article
                 key={item.title}
+                data-reveal="up"
+                style={{ transitionDelay: `${index * 80}ms` }}
                 className="group rounded-3xl border border-white/10 bg-white/[0.06] p-6 shadow-2xl backdrop-blur transition hover:-translate-y-1 hover:bg-white/[0.09]"
               >
                 <div className="mb-5 grid size-14 place-items-center rounded-2xl border border-lime-400/20 bg-lime-400/10 text-2xl text-lime-400 transition group-hover:bg-lime-400 group-hover:text-slate-950">
@@ -481,9 +520,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="about" className="px-4 py-14 sm:px-5 lg:px-8 lg:py-16">
+      <section id="about" className="scroll-mt-24 px-4 py-14 sm:px-5 lg:px-8 lg:py-16">
         <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-          <div className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-28">
+          <div
+            data-reveal="left"
+            className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-28 lg:self-start"
+          >
             <div className="inline-flex items-center gap-2 rounded-full bg-lime-400/10 px-4 py-2 text-[11px] font-black uppercase tracking-wide text-lime-700 sm:text-xs">
               <FontAwesomeIcon icon={faLocationDot} />
               Sundsgatan 31, Piteå
@@ -522,9 +564,11 @@ export default function Home() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            {aboutPoints.map((point) => (
+            {aboutPoints.map((point, index) => (
               <article
                 key={point.title}
+                data-reveal="right"
+                style={{ transitionDelay: `${index * 80}ms` }}
                 className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="mb-5 grid size-14 place-items-center rounded-2xl bg-lime-400/10 text-2xl text-lime-600">
@@ -535,13 +579,16 @@ export default function Home() {
                   {point.title}
                 </h3>
 
-                <p className="mt-3 text-sm leading-6 text-slate-600">
+                <p className="mt-3 text-sm leading-6 text-slate-600 ">
                   {point.text}
                 </p>
               </article>
             ))}
 
-            <article className="rounded-3xl border border-slate-900 bg-slate-950 p-6 text-white shadow-xl sm:col-span-2">
+            <article
+              data-reveal="up"
+              className="rounded-3xl border border-slate-900 bg-slate-950 p-6 text-white shadow-xl sm:col-span-2"
+            >
               <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                 <div>
                   <h3 className="text-2xl font-black tracking-tight">
@@ -567,9 +614,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="contact" className="px-4 pb-14 sm:px-5 lg:px-8 lg:pb-16">
+      <section id="contact" className="scroll-mt-24 px-4 pb-14 sm:px-5 lg:px-8 lg:pb-16">
         <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[0.85fr_0.7fr_1.2fr]">
-          <article className="rounded-3xl bg-[#07111f] p-5 text-white shadow-xl sm:p-6">
+          <article
+            data-reveal="up"
+            className="rounded-3xl bg-[#07111f] p-5 text-white shadow-xl sm:p-6 lg:sticky lg:top-28 lg:self-start"
+          >
             <div className="mb-5 flex items-center gap-3">
               <span className="grid size-10 place-items-center rounded-2xl bg-white/10 text-lime-400">
                 <FontAwesomeIcon icon={faCalendarDays} />
@@ -605,7 +655,11 @@ export default function Home() {
             </div>
           </article>
 
-          <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <article
+            data-reveal="up"
+            style={{ transitionDelay: "90ms" }}
+            className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+          >
             <h3 className="font-black uppercase tracking-wide text-slate-950">
               Kontakt & info
             </h3>
@@ -632,7 +686,11 @@ export default function Home() {
             </a>
           </article>
 
-          <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <article
+            data-reveal="up"
+            style={{ transitionDelay: "180ms" }}
+            className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+          >
             <h3 className="font-black uppercase tracking-wide text-slate-950">
               Hitta hit
             </h3>
@@ -689,6 +747,211 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <footer className="relative overflow-hidden bg-[#07111f] px-4 py-8 text-white sm:px-5 lg:px-8 lg:py-12">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_20%,rgba(132,204,22,0.11),transparent_30%),radial-gradient(circle_at_90%_15%,rgba(59,130,246,0.12),transparent_28%)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime-400/40 to-transparent" />
+
+        <div className="relative mx-auto max-w-7xl">
+          <div className="border-b border-white/10 pb-6 lg:pb-8">
+            <div className="grid gap-7 lg:grid-cols-[1.2fr_0.7fr_0.8fr_1fr]">
+              <div>
+                <a href="#" onClick={closeMenu} className="inline-flex items-center gap-3">
+                  <div className="grid size-11 place-items-center rounded-2xl border border-lime-400/60 bg-lime-400/10 text-xl font-black text-lime-400 shadow-[0_0_28px_rgba(132,204,22,0.18)]">
+                    D
+                  </div>
+
+                  <div className="leading-tight">
+                    <p className="text-lg font-black tracking-tight">DATORBUTIKEN</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.24em] text-white/60">
+                      i Piteå
+                    </p>
+                  </div>
+                </a>
+
+                <p className="mt-4 max-w-md text-sm leading-6 text-slate-300">
+                  Datorservice, reparationer, uppgraderingar och personlig rådgivning
+                  i Piteå.
+                </p>
+
+                <div className="mt-5 grid gap-3 sm:flex sm:flex-wrap">
+                  <a
+                    href="tel:0703272936"
+                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-lime-400 px-5 py-3 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-lime-300"
+                  >
+                    <FontAwesomeIcon icon={faPhone} />
+                    Ring butiken
+                  </a>
+
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=Sundsgatan%2031%2C%20Pite%C3%A5"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-white/10"
+                  >
+                    <FontAwesomeIcon icon={faMapLocationDot} />
+                    Hitta hit
+                  </a>
+                </div>
+              </div>
+
+              {/* Mobile compact footer */}
+              <div className="grid gap-3 lg:hidden">
+                <details className="group rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3">
+                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-black uppercase tracking-wide text-white [&::-webkit-details-marker]:hidden">
+                    Navigering
+                    <span className="text-lime-400 transition group-open:rotate-45">+</span>
+                  </summary>
+
+                  <nav className="mt-4 grid grid-cols-2 gap-3">
+                    {navItems.map((item) => (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        className="text-sm font-bold text-slate-300 transition hover:text-lime-400"
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </nav>
+                </details>
+
+                <details className="group rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3">
+                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-black uppercase tracking-wide text-white [&::-webkit-details-marker]:hidden">
+                    Kontakt & öppettider
+                    <span className="text-lime-400 transition group-open:rotate-45">+</span>
+                  </summary>
+
+                  <div className="mt-4 grid gap-4">
+                    {contactItems.map((item) => (
+                      <div key={item.text} className="flex items-center gap-3">
+                        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-lime-400/10 text-sm text-lime-400">
+                          <FontAwesomeIcon icon={item.icon} />
+                        </span>
+
+                        <span className="min-w-0 text-sm font-semibold text-slate-300">
+                          {item.text}
+                        </span>
+                      </div>
+                    ))}
+
+                    <div className="rounded-2xl border border-white/10 bg-black/10 p-4">
+                      <div className="mb-3 flex items-center gap-2 text-sm font-black">
+                        <FontAwesomeIcon icon={faClock} className="text-lime-400" />
+                        Öppettider
+                      </div>
+
+                      <div className="grid gap-2 text-sm">
+                        {openingHours.map((item) => (
+                          <div key={item.day} className="flex justify-between gap-4">
+                            <span className="text-slate-400">{item.day}</span>
+                            <span
+                              className={`font-bold ${
+                                item.closed ? "text-lime-400" : "text-slate-200"
+                              }`}
+                            >
+                              {item.time}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </div>
+
+              {/* Desktop footer columns */}
+              <div className="hidden lg:block">
+                <h3 className="text-sm font-black uppercase tracking-[0.18em] text-white/55">
+                  Navigering
+                </h3>
+
+                <nav className="mt-5 grid gap-3">
+                  {navItems.map((item) => (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      className="text-sm font-bold text-slate-300 transition hover:translate-x-1 hover:text-lime-400"
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </nav>
+              </div>
+
+              <div className="hidden lg:block">
+                <h3 className="text-sm font-black uppercase tracking-[0.18em] text-white/55">
+                  Tjänster
+                </h3>
+
+                <div className="mt-5 grid gap-3">
+                  {services.slice(0, 5).map((service) => (
+                    <a
+                      key={service.title}
+                      href="#services"
+                      className="text-sm font-bold text-slate-300 transition hover:translate-x-1 hover:text-lime-400"
+                    >
+                      {service.title}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hidden lg:block">
+                <h3 className="text-sm font-black uppercase tracking-[0.18em] text-white/55">
+                  Kontakt
+                </h3>
+
+                <div className="mt-5 grid gap-4">
+                  {contactItems.map((item) => (
+                    <div key={item.text} className="flex items-center gap-3">
+                      <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-lime-400/10 text-sm text-lime-400">
+                        <FontAwesomeIcon icon={item.icon} />
+                      </span>
+
+                      <span className="min-w-0 text-sm font-semibold text-slate-300">
+                        {item.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                  <div className="mb-3 flex items-center gap-2 text-sm font-black">
+                    <FontAwesomeIcon icon={faClock} className="text-lime-400" />
+                    Öppettider
+                  </div>
+
+                  <div className="grid gap-2 text-sm">
+                    {openingHours.map((item) => (
+                      <div key={item.day} className="flex justify-between gap-4">
+                        <span className="text-slate-400">{item.day}</span>
+                        <span
+                          className={`font-bold ${
+                            item.closed ? "text-lime-400" : "text-slate-200"
+                          }`}
+                        >
+                          {item.time}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2 pt-5 text-xs text-slate-400 sm:text-sm md:flex-row md:items-center md:justify-between">
+            <p>
+              © {new Date().getFullYear()} Datorbutiken i Piteå. Concept redesign.
+            </p>
+
+            <p className="font-semibold">
+              Byggd med Next.js, TypeScript och TailwindCSS.
+            </p>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

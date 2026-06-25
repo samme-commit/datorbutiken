@@ -1,20 +1,37 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { config } from "@fortawesome/fontawesome-svg-core";
-import "@fortawesome/fontawesome-svg-core/styles.css";
 import "./globals.css";
 
-config.autoAddCss = false;
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
 export const metadata: Metadata = {
-  title: "Datorbutiken i Piteå | Redesign Concept",
+  title: "Datorbutiken i Piteå | Datorservice & reparation",
   description:
-    "A modern redesign concept for a local computer repair and support business in Piteå.",
+    "Modern concept redesign för DataModdy / Datorbutiken i Piteå. Datorservice, reparationer, uppgraderingar, komponenter och personlig rådgivning.",
+  keywords: [
+    "Datorbutiken Piteå",
+    "DataModdy",
+    "datorservice Piteå",
+    "datorreparation Piteå",
+    "datorbutik",
+    "PC service",
+    "Mac service",
+    "skräddarsydd dator",
+    "komponenter",
+    "datorhjälp",
+  ],
+  authors: [{ name: "Samuel Oxenby" }],
+  creator: "Samuel Oxenby",
+  openGraph: {
+    title: "Datorbutiken i Piteå | Datorservice & reparation",
+    description:
+      "En modern redesign för DataModdy / Datorbutiken i Piteå med fokus på tydlig service, kontakt och lokal närvaro.",
+    type: "website",
+    locale: "sv_SE",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Datorbutiken i Piteå | Datorservice & reparation",
+    description:
+      "Modern concept redesign för DataModdy / Datorbutiken i Piteå.",
+  },
 };
 
 export default function RootLayout({
@@ -24,7 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv">
-      <body className={`${inter.variable} antialiased`}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
