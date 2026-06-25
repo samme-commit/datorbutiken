@@ -18,6 +18,12 @@ import {
   faMapLocationDot,
   faLaptop,
   faCircleCheck,
+  faKeyboard,
+  faHardDrive,
+  faWifi,
+  faStore,
+  faUsers,
+  faClock,
 } from "@fortawesome/free-solid-svg-icons";
 
 type Service = {
@@ -33,6 +39,18 @@ type Benefit = {
 };
 
 type ContactItem = {
+  text: string;
+  icon: IconDefinition;
+};
+
+type ComputerItem = {
+  title: string;
+  text: string;
+  icon: IconDefinition;
+};
+
+type AboutPoint = {
+  title: string;
   text: string;
   icon: IconDefinition;
 };
@@ -68,22 +86,22 @@ const services: Service[] = [
 const benefits: Benefit[] = [
   {
     title: "Snabb hjälp",
-    text: "Ofta samma dag",
+    text: "Service i butik",
     icon: faBolt,
   },
   {
     title: "Tryggt & säkert",
-    text: "Med garanti på arbetet",
+    text: "PC, Mac och laptops",
     icon: faShieldHalved,
   },
   {
     title: "Personlig service",
-    text: "Vi bryr oss på riktigt",
+    text: "Lokalt och nära",
     icon: faCircleCheck,
   },
   {
     title: "Lokalt i Piteå",
-    text: "Storgatan 44",
+    text: "Sundsgatan 31",
     icon: faLocationDot,
   },
 ];
@@ -94,20 +112,62 @@ const contactItems: ContactItem[] = [
     icon: faPhone,
   },
   {
-    text: "info@datorbutikenpitea.se",
-    icon: faEnvelope,
-  },
-  {
-    text: "Storgatan 44, 941 31 Piteå",
+    text: "Sundsgatan 31, 941 32 Piteå",
     icon: faLocationDot,
   },
   {
-    text: "www.datorbutikenpitea.se",
+    text: "datamoddy.se",
     icon: faGlobe,
   },
 ];
 
 const brands = ["ASUS", "acer", "MSI", "HP", "Lenovo", "SAMSUNG", "intel"];
+
+const computerItems: ComputerItem[] = [
+  {
+    title: "Skräddarsydda datorer",
+    text: "Få hjälp att välja eller bygga en dator som passar gaming, arbete, studier eller kreativa projekt.",
+    icon: faDesktop,
+  },
+  {
+    title: "Komponenter",
+    text: "Vi hjälper dig med rätt delar som processor, grafikkort, minne, lagring och nätaggregat.",
+    icon: faMicrochip,
+  },
+  {
+    title: "Tillbehör",
+    text: "Tangentbord, möss, skärmar, kablar, nätverk och andra tillbehör för hem och kontor.",
+    icon: faKeyboard,
+  },
+  {
+    title: "Uppgradering",
+    text: "Ge din nuvarande dator nytt liv med SSD, mer RAM, bättre kylning eller nyare komponenter.",
+    icon: faHardDrive,
+  },
+];
+
+const aboutPoints: AboutPoint[] = [
+  {
+    title: "Lokal butik i Piteå",
+    text: "Personlig hjälp på plats, utan krångliga supportköer eller anonyma webbsidor.",
+    icon: faStore,
+  },
+  {
+    title: "Hjälp för både privatpersoner och företag",
+    text: "Oavsett om det gäller hemmadatorn, jobbdatorn eller kontorets utrustning hjälper vi dig vidare.",
+    icon: faUsers,
+  },
+  {
+    title: "Service, support och rådgivning",
+    text: "Vi felsöker, reparerar, uppgraderar och guidar dig till rätt lösning.",
+    icon: faScrewdriverWrench,
+  },
+  {
+    title: "Enklare teknikvardag",
+    text: "Målet är att din dator, ditt nätverk och dina tillbehör ska fungera smidigt i vardagen.",
+    icon: faWifi,
+  },
+];
 
 export default function Home() {
   return (
@@ -296,6 +356,154 @@ export default function Home() {
         </div>
       </section>
 
+      <section
+        id="computers"
+        className="relative overflow-hidden bg-[#07111f] px-5 py-16 text-white lg:px-8"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(132,204,22,0.12),transparent_28%),radial-gradient(circle_at_85%_15%,rgba(59,130,246,0.16),transparent_30%)]" />
+
+        <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div>
+            <p className="text-sm font-black uppercase tracking-wide text-lime-400">
+              Datorer & tillbehör
+            </p>
+
+            <h2 className="mt-2 max-w-xl text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
+              Rätt dator, rätt delar och rätt hjälp från början.
+            </h2>
+
+            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-300">
+              Behöver du en ny dator, bättre prestanda eller hjälp att välja rätt
+              komponenter? Vi hjälper dig hitta en lösning som passar dina behov,
+              din budget och hur du faktiskt använder datorn.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="tel:0703272936"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-lime-400 px-7 py-4 font-black text-slate-950 shadow-[0_18px_45px_rgba(132,204,22,0.22)] transition hover:-translate-y-0.5 hover:bg-lime-300"
+              >
+                <FontAwesomeIcon icon={faPhone} />
+                Ring och fråga
+              </a>
+
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-4 font-black text-white transition hover:-translate-y-0.5 hover:bg-white/10"
+              >
+                <FontAwesomeIcon icon={faArrowRight} />
+                Se kontaktinfo
+              </a>
+            </div>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            {computerItems.map((item) => (
+              <article
+                key={item.title}
+                className="group rounded-3xl border border-white/10 bg-white/[0.06] p-6 shadow-2xl backdrop-blur transition hover:-translate-y-1 hover:bg-white/[0.09]"
+              >
+                <div className="mb-5 grid size-14 place-items-center rounded-2xl border border-lime-400/20 bg-lime-400/10 text-2xl text-lime-400 transition group-hover:bg-lime-400 group-hover:text-slate-950">
+                  <FontAwesomeIcon icon={item.icon} />
+                </div>
+
+                <h3 className="text-lg font-black">{item.title}</h3>
+
+                <p className="mt-3 text-sm leading-6 text-slate-300">
+                  {item.text}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="about" className="px-5 py-16 lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm lg:sticky lg:top-28">
+            <div className="inline-flex items-center gap-2 rounded-full bg-lime-400/10 px-4 py-2 text-xs font-black uppercase tracking-wide text-lime-700">
+              <FontAwesomeIcon icon={faLocationDot} />
+              Sundsgatan 31, Piteå
+            </div>
+
+            <h2 className="mt-5 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+              En lokal datorbutik med personlig service.
+            </h2>
+
+            <p className="mt-5 text-base leading-8 text-slate-600">
+              Datorbutiken i Piteå hjälper kunder med datorservice, reparationer,
+              uppgraderingar, komponenter och rådgivning. Här får du hjälp av någon
+              som faktiskt lyssnar på problemet och försöker hitta en lösning som
+              passar dig.
+            </p>
+
+            <div className="mt-7 rounded-3xl bg-slate-950 p-5 text-white">
+              <div className="flex items-center gap-3">
+                <span className="grid size-11 place-items-center rounded-2xl bg-lime-400/10 text-lime-400">
+                  <FontAwesomeIcon icon={faClock} />
+                </span>
+
+                <div>
+                  <p className="text-sm font-black uppercase tracking-wide">
+                    Öppettider
+                  </p>
+                  <p className="mt-1 text-sm text-slate-300">
+                    Mån, tis, tors, fre · 10:00 - 18:00
+                  </p>
+                  <p className="mt-1 text-sm font-bold text-lime-400">
+                    Onsdagar stängt
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            {aboutPoints.map((point) => (
+              <article
+                key={point.title}
+                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div className="mb-5 grid size-14 place-items-center rounded-2xl bg-lime-400/10 text-2xl text-lime-600">
+                  <FontAwesomeIcon icon={point.icon} />
+                </div>
+
+                <h3 className="text-lg font-black text-slate-950">
+                  {point.title}
+                </h3>
+
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  {point.text}
+                </p>
+              </article>
+            ))}
+
+            <article className="rounded-3xl border border-slate-900 bg-slate-950 p-6 text-white shadow-xl sm:col-span-2">
+              <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h3 className="text-2xl font-black tracking-tight">
+                    Osäker på vad du behöver?
+                  </h3>
+
+                  <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
+                    Ring butiken eller kom in med datorn, så får du hjälp att förstå
+                    vad problemet är och vilken lösning som passar bäst.
+                  </p>
+                </div>
+
+                <a
+                  href="tel:0703272936"
+                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-lime-400 px-6 py-4 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-lime-300"
+                >
+                  <FontAwesomeIcon icon={faPhone} />
+                  070-327 29 36
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section id="contact" className="px-5 pb-16 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[0.85fr_0.7fr_1.2fr]">
           <article className="rounded-3xl bg-[#07111f] p-6 text-white shadow-xl">
@@ -310,18 +518,28 @@ export default function Home() {
 
             <div className="space-y-4 text-sm">
               <div className="flex justify-between border-b border-white/10 pb-4">
-                <span className="text-slate-300">Måndag – Fredag</span>
-                <span className="font-black">10:00 – 18:00</span>
+                <span className="text-slate-300">Måndag</span>
+                <span className="font-black">10:00 - 18:00</span>
               </div>
 
               <div className="flex justify-between border-b border-white/10 pb-4">
-                <span className="text-slate-300">Lördag</span>
-                <span className="font-black">10:00 – 14:00</span>
+                <span className="text-slate-300">Tisdag</span>
+                <span className="font-black">10:00 - 18:00</span>
+              </div>
+
+              <div className="flex justify-between border-b border-white/10 pb-4">
+                <span className="text-slate-300">Onsdag</span>
+                <span className="font-black text-lime-400">Stängt</span>
+              </div>
+
+              <div className="flex justify-between border-b border-white/10 pb-4">
+                <span className="text-slate-300">Torsdag</span>
+                <span className="font-black">10:00 - 18:00</span>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-slate-300">Söndag</span>
-                <span className="font-black">Stängt</span>
+                <span className="text-slate-300">Fredag</span>
+                <span className="font-black">10:00 - 18:00</span>
               </div>
             </div>
 
@@ -358,7 +576,7 @@ export default function Home() {
             <div className="relative mt-5 h-52 overflow-hidden rounded-3xl bg-slate-100">
               <iframe
                 title="Karta till Datorbutiken i Piteå"
-                src="https://www.google.com/maps?q=Storgatan%2044%2C%20941%2031%20Pite%C3%A5&output=embed"
+                src="https://www.google.com/maps?q=Sundsgatan%2031%2C%20941%2032%20Pite%C3%A5&output=embed"
                 className="h-full w-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -371,9 +589,9 @@ export default function Home() {
                 </div>
 
                 <p className="mt-2 text-xs leading-5 text-slate-300">
-                  Storgatan 44
+                  Sundsgatan 31
                   <br />
-                  941 31 Piteå
+                  941 32 Piteå
                 </p>
               </div>
             </div>
