@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Datorbutiken i Piteå | Datorservice & reparation",
   description:
     "Modern concept redesign för DataModdy / Datorbutiken i Piteå. Datorservice, reparationer, uppgraderingar, komponenter och personlig rådgivning.",
+  applicationName: "Datorbutiken i Piteå",
   keywords: [
     "Datorbutiken Piteå",
     "DataModdy",
@@ -23,6 +25,7 @@ export const metadata: Metadata = {
     title: "Datorbutiken i Piteå | Datorservice & reparation",
     description:
       "En modern redesign för DataModdy / Datorbutiken i Piteå med fokus på tydlig service, kontakt och lokal närvaro.",
+    siteName: "Datorbutiken i Piteå",
     type: "website",
     locale: "sv_SE",
   },
@@ -32,12 +35,15 @@ export const metadata: Metadata = {
     description:
       "Modern concept redesign för DataModdy / Datorbutiken i Piteå.",
   },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="sv">
